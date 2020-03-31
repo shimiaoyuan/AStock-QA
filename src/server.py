@@ -21,7 +21,7 @@ def update_today_stock():
 @app.route('/create_all_stock')
 def hello():
     sina_sample.new_all_table()
-    return 'hello'
+    return 'Create Success'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5000)
