@@ -18,5 +18,9 @@ def update_today_stock():
     sina_sample.insert_today_data('sz002412')
     return 'Update Success'
 
+@app.route('/hello')
+def hello():
+    return 'hello'
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1',port=5000)
