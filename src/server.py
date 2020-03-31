@@ -15,11 +15,12 @@ sina_sample = sina()
 
 @app.route('/update_today_stock')
 def update_today_stock():
-    sina_sample.insert_today_data('sz002412')
+    sina_sample.insert_all_today_data()
     return 'Update Success'
 
-@app.route('/hello')
+@app.route('/create_all_stock')
 def hello():
+    sina_sample.new_all_table()
     return 'hello'
 
 if __name__ == '__main__':
