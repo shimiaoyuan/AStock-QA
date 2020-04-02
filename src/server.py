@@ -6,6 +6,7 @@
 # @File    : server.py
 # @mail: jeff.shi@aispeech.com
 from flask import Flask
+from flask import request
 from sina import sina
 from datetime import datetime
 import json
@@ -15,7 +16,8 @@ sina_sample = sina()
 
 @app.route('/update_today_stock')
 def update_today_stock():
-    sina_sample.insert_all_today_data()
+    day = request.args.get('day', default='', type=str)
+    sina_sample.insert_all_today_data(day)
     return 'Update Success'
 
 @app.route('/create_all_stock')
