@@ -57,10 +57,8 @@ class sina():
     def request_day_data(self,stock_id,day):
         self.stock = stock_id
         self.data_url = self.data_url.format(stock_id,self.data_len)
-        print(self.data_url)
         response = requests.request("GET", self.data_url)
         res = response.text
-        print(res)
         res = demjson.decode(res)
         items = []
         for item in res:
@@ -99,5 +97,6 @@ class sina():
             line = line.strip()
             line = line.split('\t')
             print(line)
+            time.sleep(1)
             code = line[1]
             self.insert_today_data(code,day)
