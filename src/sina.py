@@ -93,10 +93,12 @@ class sina():
 
     def insert_all_today_data(self,day):
         fn = codecs.open('../data/stock.txt','r','utf-8')
+        count = 0
         for line in fn:
+            count+=1
             line = line.strip()
             line = line.split('\t')
-            print(line)
+            print(line,count)
             time.sleep(1)
             code = line[1]
             self.insert_today_data(code,day)
