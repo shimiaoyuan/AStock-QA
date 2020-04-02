@@ -13,6 +13,7 @@ import demjson
 from datetime import datetime
 from mysql_interface import mysql_interface
 import pymysql
+import time
 
 
 class sina():
@@ -56,9 +57,10 @@ class sina():
     def request_day_data(self,stock_id,day):
         self.stock = stock_id
         self.data_url = self.data_url.format(stock_id,self.data_len)
-
+        print(self.data_url)
         response = requests.request("GET", self.data_url)
         res = response.text
+        print(res)
         res = demjson.decode(res)
         items = []
         for item in res:
@@ -69,12 +71,21 @@ class sina():
                 items.append(item)
         return items
 
+    def request_all_day(self,day):
+        fn = codecs.open('../data/stock.txt','r','utf-8')
+        for line in fn:
+            line = line.strip()
+            line = line.split('\t')
+            print(line)
+            code = line[1]
+            time.sleep(1)
+            self.request_day_data(code,day)
+
     def insert_today_data(self,stock_id,day):
         cur = self.mysql.conn.cursor()
         if not day:
             day = datetime.now().strftime("%Y-%m-%d")
         res = self.request_day_data(stock_id,day)
-        print(res)
         if res:
             sql = "insert into {}(day,time,open,high,low,close,volume,ma_price,ma_volume) values(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(stock_id)
             for item in res:
