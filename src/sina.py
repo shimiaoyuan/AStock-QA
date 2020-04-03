@@ -99,6 +99,6 @@ class sina():
             line = line.strip()
             line = line.split('\t')
             print(line,count)
-            time.sleep(10)
+            time.sleep(2)
             code = line[1]
             self.insert_today_data(code,day)
