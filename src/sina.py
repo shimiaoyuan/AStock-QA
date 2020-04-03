@@ -20,7 +20,7 @@ class sina():
     def __init__(self):
         self.data_url = 'http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol={}&scale=5&ma=5&datalen={}'
         self.stock = ''
-        self.data_len = 100
+        self.data_len = 200
         self.mysql = mysql_interface()
 
     def get_day_url (self,stock_id):
