@@ -56,6 +56,7 @@ class sina():
 
     def request_day_data(self,stock_id,day):
         self.stock = stock_id
+        print(stock_id)
         self.data_url = self.data_url.format(stock_id,self.data_len)
         print(self.data_url)
         response = requests.request("GET", self.data_url)
