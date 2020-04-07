@@ -57,6 +57,7 @@ class sina():
     def request_day_data(self,stock_id,day):
         self.stock = stock_id
         self.data_url = self.data_url.format(stock_id,self.data_len)
+        print(self.data_url)
         response = requests.request("GET", self.data_url)
         res = response.text
         res = demjson.decode(res)
@@ -84,8 +85,6 @@ class sina():
         if not day:
             day = datetime.now().strftime("%Y-%m-%d")
         res = self.request_day_data(stock_id,day)
-        print(stock_id,day)
-        print(res)
         if res:
             sql = "insert into {}(day,time,open,high,low,close,volume,ma_price,ma_volume) values(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(stock_id)
             for item in res:
