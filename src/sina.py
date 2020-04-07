@@ -115,7 +115,7 @@ class sina():
             line = line.strip()
             line = line.split('\t')
             code = line[1]
-            sql = "ALTER TABLE {} MODIFY COLUMN volume bigint;".format(code)
+            sql = "ALTER TABLE {} MODIFY COLUMN ma_volume5 bigint;".format(code)
             cur.execute(sql)
         self.mysql.conn.commit()
         cur.close()
