@@ -86,8 +86,10 @@ class sina():
         res = self.request_day_data(stock_id,day)
         if res:
             sql = "insert into {}(day,time,open,high,low,close,volume,ma_price,ma_volume) values(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(stock_id)
+
             for item in res:
-                cur.execute(sql, [item['day'],item['time'],item['open'],item['high'],item['low'],item['close'],item['volume'],item['ma_price5'],item['ma_volume5']])
+                if item:
+                    cur.execute(sql, [item['day'],item['time'],item['open'],item['high'],item['low'],item['close'],item['volume'],item['ma_price5'],item['ma_volume5']])
             self.mysql.conn.commit()
             cur.close()
 
