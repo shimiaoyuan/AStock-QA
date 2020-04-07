@@ -109,9 +109,9 @@ class sina():
         cur = self.mysql.conn.cursor()
 
         count = 0
-        print(count)
         for line in fn:
             count+=1
+            print(count)
             line = line.strip()
             line = line.split('\t')
             code = line[1]
