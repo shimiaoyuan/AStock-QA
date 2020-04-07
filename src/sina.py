@@ -56,6 +56,7 @@ class sina():
 
     def request_day_data(self,stock_id,day):
         self.stock = stock_id
+        print(self.data_url.format(stock_id,self.data_len))
         response = requests.request("GET", self.data_url.format(stock_id,self.data_len))
         res = response.text
         res = demjson.decode(res)
@@ -86,7 +87,6 @@ class sina():
         if res:
             sql = "insert into {}(day,time,open,high,low,close,volume,ma_price,ma_volume) values(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(stock_id)
             for item in res:
-                print(item)
                 cur.execute(sql, [item['day'],item['time'],item['open'],item['high'],item['low'],item['close'],item['volume'],item['ma_price5'],item['ma_volume5']])
             self.mysql.conn.commit()
             cur.close()
