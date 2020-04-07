@@ -61,12 +61,13 @@ class sina():
         res = response.text
         res = demjson.decode(res)
         items = []
-        for item in res:
-            if day in item['day']:
-                real_tiem = item['day']
-                item['day'] = real_tiem.split()[0]
-                item['time'] = real_tiem.split()[1]
-                items.append(item)
+        if res:
+            for item in res:
+                if day in item['day']:
+                    real_tiem = item['day']
+                    item['day'] = real_tiem.split()[0]
+                    item['time'] = real_tiem.split()[1]
+                    items.append(item)
         return items
 
     def request_all_day(self,day):
@@ -86,7 +87,6 @@ class sina():
         res = self.request_day_data(stock_id,day)
         if res:
             sql = "insert into {}(day,time,open,high,low,close,volume,ma_price,ma_volume) values(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(stock_id)
-            print('!!!!!!')
             for item in res:
                 if item:
                     cur.execute(sql, [item['day'],item['time'],item['open'],item['high'],item['low'],item['close'],item['volume'],item['ma_price5'],item['ma_volume5']])
