@@ -103,3 +103,23 @@ class sina():
             time.sleep(2)
             code = line[1]
             self.insert_today_data(code,day)
+
+    def change_data_type(self):
+        fn = codecs.open('../data/stock.txt','r','utf-8')
+        cur = self.mysql.conn.cursor()
+
+        count = 0
+        print(count)
+        for line in fn:
+            count+=1
+            line = line.strip()
+            line = line.split('\t')
+            code = line[1]
+            sql = "ALTER TABLE {} MODIFY COLUMN volume bigint;".format(code)
+            cur.execute(sql)
+        self.mysql.conn.commit()
+        cur.close()
+
+
+
+
