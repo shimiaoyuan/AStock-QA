@@ -84,7 +84,6 @@ class sina():
         if not day:
             day = datetime.now().strftime("%Y-%m-%d")
         res = self.request_day_data(stock_id,day)
-        print(res)
         if res:
             sql = "insert into {}(day,time,open,high,low,close,volume,ma_price,ma_volume) values(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(stock_id)
             for item in res:
@@ -102,6 +101,7 @@ class sina():
             print(line,count)
             time.sleep(2)
             code = line[1]
+            print(code,day)
             self.insert_today_data(code,day)
 
     def change_data_type(self):
