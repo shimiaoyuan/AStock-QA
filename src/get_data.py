@@ -17,4 +17,4 @@ import re
 sample = sina()
 today = datetime.now().strftime("%Y-%m-%d")
 # print(sample.request_all_day('2020-04-01'))
-print(sample.change_data_type)
+print(sample.change_data_type())
