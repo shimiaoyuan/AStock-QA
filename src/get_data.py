@@ -16,5 +16,5 @@ import time
 import re
 sample = sina()
 today = datetime.now().strftime("%Y-%m-%d")
-print(sample.insert_today_data('sz002412'))
-
+# print(sample.request_all_day('2020-04-01'))
+print(sample.change_data_type)
