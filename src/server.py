@@ -26,7 +26,7 @@ def hello():
     return 'Create Success'
 
 @app.route('/delete_day_stock')
-def update_today_stock():
+def delete_today_stock():
     day = request.args.get('day', default='', type=str)
     sina_sample.delete_oneday_all_data(day)
     return 'Delete Success'
