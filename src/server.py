@@ -25,5 +25,11 @@ def hello():
     sina_sample.new_all_table()
     return 'Create Success'
 
+@app.route('/delete_day_stock')
+def update_today_stock():
+    day = request.args.get('day', default='', type=str)
+    sina_sample.delete_oneday_all_data(day)
+    return 'Delete Success'
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5000)
