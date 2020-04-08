@@ -144,6 +144,7 @@ class sina():
             line = line.strip()
             line = line.split('\t')
             code = line[1]
+            print(line, count)
             self.delete_oneday_stock_data(code,day)
 
     ##分析
