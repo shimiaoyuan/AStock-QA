@@ -101,7 +101,7 @@ class sina():
             line = line.strip()
             line = line.split('\t')
             print(line,count)
-            time.sleep(2)
+            time.sleep(1)
             code = line[1]
             self.insert_today_data(code,day)
 
