@@ -121,6 +121,40 @@ class sina():
         self.mysql.conn.commit()
         cur.close()
 
+    #添加新股票
+    def add_new_stock(self,name,stock_id):
+        fn = codecs.open('../data/stock.txt','a','txt')
+        fn.write(name+'\t'+stock_id+'\n')
+        fn.close()
+        self.new_table(stock_id)
+
+    #删除数据
+    def delete_oneday_stock_data(self,stock_id,day):
+        cur = self.mysql.conn.cursor()
+        sql = "DELETE FROM {} WHERE day = '{}'".format(stock_id,day)
+        cur.execute(sql)
+        self.mysql.conn.commit()
+        cur.close()
+
+    def delete_oneday_all_data(self,day):
+        fn = codecs.open('../data/stock.txt','r','utf-8')
+        count = 0
+        for line in fn:
+            count+=1
+            line = line.strip()
+            line = line.split('\t')
+            code = line[1]
+            self.delete_oneday_stock_data(code,day)
+
+    ##分析
+    def upstock(self,day,st):
+        fn = codecs.open('../data/stock.txt','r','utf-8')
+        count = 0
+        for line in fn:
+            count+=1
+            if (not st )and 'ST' in line:
+                continue
+
 
 
 
