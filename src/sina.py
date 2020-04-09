@@ -215,8 +215,10 @@ class sina():
                 time_price[time] = price
 
         time_line = sorted(time_price.keys())
-        last = time_line[-1]
-        last_price = time_price[last]
+        last_price = 1e-5
+        if time_line:
+            last = time_line[-1]
+            last_price = time_price[last]
 
         gain = (last_price/yesterday_price)-1
         gain*=100
