@@ -31,5 +31,40 @@ def delete_today_stock():
     sina_sample.delete_oneday_all_data(day)
     return 'Delete Success'
 
+@app.route('/stock_gain')
+def search_stock_gain():
+    day = request.args.get('day', default='', type=str)
+    gain = request.args.get('gain', default='', type=str)
+    st = request.args.get('st', default='', type=str)
+
+    gain = float(gain)
+    st = bool(st)
+    data = sina_sample.stock_gain(day,gain,st)
+
+    return data
+
+@app.route('/stock_gain_time')
+def search_stock_gain_time():
+    day = request.args.get('day', default='', type=str)
+    time = request.args.get('time', default='', type=str)
+    gain = request.args.get('gain', default='', type=str)
+    st = request.args.get('st', default='', type=str)
+
+    gain = float(gain)
+    st = bool(st)
+    data = sina_sample.stock_gain_time(day,time, gain, st)
+    return data
+
+@app.route('/stock_gain_break')
+def search_stock_gain_break():
+    day = request.args.get('day', default='', type=str)
+    gain = request.args.get('gain', default='', type=str)
+    st = request.args.get('st', default='', type=str)
+
+    gain = float(gain)
+    st = bool(st)
+
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',port=5000)
+    app.run(host='0.0.0.0',port=5000,threaded=True)

@@ -17,4 +17,9 @@ import re
 sample = sina()
 today = datetime.now().strftime("%Y-%m-%d")
 # print(sample.request_all_day('2020-04-01'))
-print(sample.change_data_type())
+# print(sample.gain_one_stock_break('sz002412','2020-04-08'))
+
+a= 4
+
+if (True) and (a<3):
+    print('!!1')

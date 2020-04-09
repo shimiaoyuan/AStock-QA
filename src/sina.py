@@ -10,7 +10,7 @@ import requests
 import codecs
 from urllib.request import quote, unquote
 import demjson
-from datetime import datetime
+from datetime import datetime,timedelta
 from mysql_interface import mysql_interface
 import pymysql
 import time
@@ -94,6 +94,10 @@ class sina():
             cur.close()
 
     def insert_all_today_data(self,day):
+        fo = codecs.open('../data/date.txt','a','utf-8')
+        fo.write(day+'\n')
+        fo.close()
+
         fn = codecs.open('../data/stock.txt','r','utf-8')
         count = 0
         for line in fn:
@@ -147,15 +151,164 @@ class sina():
             print(line, count)
             self.delete_oneday_stock_data(code,day)
 
-    ##分析
-    def upstock(self,day,st):
+    #根据日期查询
+    def search_oneday_stock(self,ziduan,stock_id,day):
+        cur = self.mysql.conn.cursor()
+        sql = "SELECT time,{} FROM {} WHERE day = '{}'".format(ziduan,stock_id,day)
+        cur.execute(sql)
+        data = cur.fetchall()
+        self.mysql.conn.commit()
+        cur.close()
+        return data
+
+    #获取前一天的日期
+    def find_yesterday(self,day):
+        day_line = []
+        fn = codecs.open('../data/date.txt','r','utf-8')
+        for line in fn:
+            line = line.strip()
+            if line not in day_line:
+                day_line.append(line)
+
+        today_index = day_line.index(day)
+        return day_line[today_index-1]
+
+    #找到收盘价
+    def find_last_price(self,stock_id,day):
+        data = self.search_oneday_stock('close',stock_id, day)
+        time_price = {}
+
+        for time,price in data:
+            time_price[time] = price
+        time_line = sorted(time_price.keys())
+        last = time_line[-1]
+        last_price = time_price[last]
+        return last_price
+
+    ##分析股票一天涨跌幅度
+    def gain_one_stock(self,stock_id,day):
+        #昨天收盘价
+        yesterday = self.find_yesterday(day)
+        yesterday_price = self.find_last_price(stock_id,yesterday)
+        #当天收盘价
+        today_price = self.find_last_price(stock_id,day)
+        gain = (today_price/yesterday_price)-1
+        gain*=100
+        gain = round(gain, 3)
+        return gain
+
+    ##分析股票一天在某个时间点前的涨跌幅度
+    def gain_one_time_stock(self,stock_id,day,query_time):
+        #昨天收盘价
+        yesterday = self.find_yesterday(day)
+        yesterday_price = self.find_last_price(stock_id,yesterday)
+
+        #当天time之前的收盘价
+        data = self.search_oneday_stock('close',stock_id,day)
+        query_time =  datetime.strptime(query_time,"%H:%M:%S")
+        query_time = query_time-datetime(1900, 1, 1)
+        time_price = {}
+        for time,price in data:
+            if time<query_time:
+                time_price[time] = price
+
+        time_line = sorted(time_price.keys())
+        last = time_line[-1]
+        last_price = time_price[last]
+
+        gain = (last_price/yesterday_price)-1
+        gain*=100
+        gain = round(gain, 3)
+        return gain
+
+    ##分析股票一天是否打到过某个gain,最后又无法达到
+    def gain_one_stock_break(self,stock_id,day):
+        #昨天收盘价
+        yesterday = self.find_yesterday(day)
+        yesterday_price = self.find_last_price(stock_id,yesterday)
+        data = self.search_oneday_stock('close',stock_id,day)
+
+        time_price = {}
+        for time,price in data:
+            time_price[time] = price
+        time_line = sorted(time_price.keys())
+        first = time_line[0]
+
+        gain_line = []
+        for item in time_line:
+            item_gain = (time_price[item] / yesterday_price) - 1
+            item_gain *= 100
+            item_gain = round(item_gain, 3)
+            gain_line.append(item_gain)
+
+        return gain_line
+
+    def stock_gain(self,day,gain,st):
         fn = codecs.open('../data/stock.txt','r','utf-8')
         count = 0
+        res = {}
         for line in fn:
             count+=1
+            line = line.strip()
+
             if (not st )and 'ST' in line:
                 continue
 
+            line = line.split('\t')
+            print(line,count)
+            code = line[1]
+            gain_res = self.gain_one_stock(code,day)
+            if gain_res>= gain:
+                res[code] = gain_res
 
+        return json.dumps(res,ensure_ascii=False)
 
+    #time之前达到gain的数,且收盘大于或小于达到gain的数
+    def stock_gain_time(self,day,time,gain,st,open):
+        fn = codecs.open('../data/stock.txt','r','utf-8')
+        count = 0
+        res = {}
+        for line in fn:
+            count+=1
+            line = line.strip()
 
+            if (not st )and 'ST' in line:
+                continue
+
+            line = line.split('\t')
+            print(line,count)
+            code = line[1]
+            gain_time = self.gain_one_time_stock(code,day,time)
+            gain_day = self.gain_one_stock(code, day)
+            if not open:
+                if (gain_time>= gain) and (gain_day>=gain):
+                    res[code] = gain_day
+            else:
+                if (gain_time >= gain) and (gain_day < gain):
+                    res[code] = gain_day
+
+        return json.dumps(res,ensure_ascii=False)
+
+    def stock_gain_break(self,day,gain,st):
+        fn = codecs.open('../data/stock.txt','r','utf-8')
+        count = 0
+        res = {}
+        for line in fn:
+            count+=1
+            line = line.strip()
+
+            if (not st )and 'ST' in line:
+                continue
+
+            line = line.split('\t')
+            print(line,count)
+            code = line[1]
+            gain_line = self.gain_one_stock_break(code,day)
+            gain_break = False
+            for i in range(0,len(gain_line)-1):
+                if gain_line[i]>gain:
+                    gain_break = True
+                    break
+            if (gain_break) and (gain_line[-1]<gain):
+                res[code] = gain_line[-1]
+        return json.dumps(res,ensure_ascii=False)
