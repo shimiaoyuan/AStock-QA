@@ -181,6 +181,7 @@ class sina():
         for time,price in data:
             time_price[time] = price
         time_line = sorted(time_price.keys())
+        print(time_line)
         last = time_line[-1]
         last_price = time_price[last]
         return last_price
