@@ -181,9 +181,10 @@ class sina():
         for time,price in data:
             time_price[time] = price
         time_line = sorted(time_price.keys())
-        print(time_line)
-        last = time_line[-1]
-        last_price = time_price[last]
+        last_price = 0.0
+        if time_line:
+            last = time_line[-1]
+            last_price = time_price[last]
         return last_price
 
     ##分析股票一天涨跌幅度
