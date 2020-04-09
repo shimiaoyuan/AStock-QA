@@ -49,10 +49,12 @@ def search_stock_gain_time():
     time = request.args.get('time', default='', type=str)
     gain = request.args.get('gain', default='', type=str)
     st = request.args.get('st', default='', type=str)
+    open = request.args.get('open', default='', type=str)
 
     gain = float(gain)
     st = bool(st)
-    data = sina_sample.stock_gain_time(day,time, gain, st)
+    open = bool(open)
+    data = sina_sample.stock_gain_time(day,time, gain, st,open)
     return data
 
 @app.route('/stock_gain_break')
