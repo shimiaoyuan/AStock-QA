@@ -194,9 +194,13 @@ class sina():
         yesterday_price = self.find_last_price(stock_id,yesterday)
         #当天收盘价
         today_price = self.find_last_price(stock_id,day)
-        gain = (today_price/yesterday_price)-1
-        gain*=100
-        gain = round(gain, 3)
+
+        gain = 0.0
+        if (yesterday_price>1e-4) and  (today_price>1e-4):
+            gain = (today_price/yesterday_price)-1
+            gain*=100
+            gain = round(gain, 3)
+
         return gain
 
     ##分析股票一天在某个时间点前的涨跌幅度
@@ -220,12 +224,11 @@ class sina():
             last = time_line[-1]
             last_price = time_price[last]
 
-
-        gain = (last_price/yesterday_price)-1
-        gain*=100
-        gain = round(gain, 3)
-        if gain> 11:
-            print(last_price,yesterday_price)
+        gain = 0.0
+        if (yesterday_price>1e-4) and  (last_price>1e-4):
+            gain = (last_price/yesterday_price)-1
+            gain*=100
+            gain = round(gain, 3)
         return gain
 
     ##分析股票一天是否打到过某个gain,最后又无法达到
