@@ -286,6 +286,7 @@ class sina():
                 if (gain_time>= gain) and (gain_day>=gain):
                     res[code] = gain_day
             else:
+                print('here')
                 if (gain_time >= gain) and (gain_day < gain):
                     res[code] = gain_day
 
