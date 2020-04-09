@@ -275,7 +275,7 @@ class sina():
         for line in fn:
             count+=1
             line = line.strip()
-
+            print(st)
             if (not st )and 'ST' in line:
                 continue
 
