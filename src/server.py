@@ -52,8 +52,8 @@ def search_stock_gain_time():
     open = request.args.get('open', default='', type=str)
 
     gain = float(gain)
-    st = bool(st)
-    open = bool(open)
+    st = bool(int(st))
+    open = bool(int(open))
     data = sina_sample.stock_gain_time(day,time, gain, st,open)
     return data
 
