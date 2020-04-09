@@ -275,15 +275,15 @@ class sina():
         for line in fn:
             count+=1
             line = line.strip()
-            print(st)
             if (not st )and 'ST' in line:
                 continue
 
             line = line.split('\t')
             code = line[1]
+            print(line,count)
+
             gain_time = self.gain_one_time_stock(code,day,time)
             gain_day = self.gain_one_stock(code, day)
-            print(open)
             if not open:
                 if (gain_time>= gain) and (gain_day>=gain):
                     res[code] = gain_day
