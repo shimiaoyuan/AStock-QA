@@ -283,12 +283,11 @@ class sina():
             code = line[1]
             gain_time = self.gain_one_time_stock(code,day,time)
             gain_day = self.gain_one_stock(code, day)
+            print(open)
             if not open:
                 if (gain_time>= gain) and (gain_day>=gain):
                     res[code] = gain_day
             else:
-                print(line, count)
-                print('here')
                 if (gain_time >= gain) and (gain_day < gain):
                     res[code] = gain_day
 
