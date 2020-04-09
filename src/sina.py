@@ -220,9 +220,12 @@ class sina():
             last = time_line[-1]
             last_price = time_price[last]
 
+
         gain = (last_price/yesterday_price)-1
         gain*=100
         gain = round(gain, 3)
+        if gain> 11:
+            print(last_price,yesterday_price)
         return gain
 
     ##分析股票一天是否打到过某个gain,最后又无法达到
@@ -280,7 +283,7 @@ class sina():
 
             line = line.split('\t')
             code = line[1]
-            print(line,count)
+            # print(line,count)
 
             gain_time = self.gain_one_time_stock(code,day,time)
             gain_day = self.gain_one_stock(code, day)
